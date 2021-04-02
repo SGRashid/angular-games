@@ -11,6 +11,12 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
+    "paths": {
+      "sergei-angular-snake": [
+        "dist/sergei-angular-snake/sergei-angular-snake",
+        "dist/sergei-angular-snake"
+      ]
+    },
     "module": "es2020",
     "lib": [
       "es2018",

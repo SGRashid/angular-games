@@ -122,6 +122,46 @@
           }
         }
       }
+    },
+    "sergei-angular-snake": {
+      "projectType": "library",
+      "root": "projects/sergei-angular-snake",
+      "sourceRoot": "projects/sergei-angular-snake/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/sergei-angular-snake/tsconfig.lib.json",
+            "project": "projects/sergei-angular-snake/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/sergei-angular-snake/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/sergei-angular-snake/src/test.ts",
+            "tsConfig": "projects/sergei-angular-snake/tsconfig.spec.json",
+            "karmaConfig": "projects/sergei-angular-snake/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/sergei-angular-snake/tsconfig.lib.json",
+              "projects/sergei-angular-snake/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "angular-games"
