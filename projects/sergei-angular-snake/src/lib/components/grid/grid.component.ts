@@ -1,5 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Row, Grid } from '../../data.d';
+
+// вынеси типы в отдельный файл
+type Cell = 'empty' | 'snake' | 'food' | 'enemy';
+type Row = Cell[];
+type Grid = Row[];
 
 @Component({
   selector: 'lib-grid',

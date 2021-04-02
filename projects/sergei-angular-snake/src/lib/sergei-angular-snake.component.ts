@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'lib-snake',
   template: `
-    <lib-grid [width]="3"></lib-grid>
+    <lib-grid [width]="20"></lib-grid>
   `,
   styles: [
   ]
