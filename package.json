@@ -5,6 +5,9 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build-lib": "ng build sergei-angular-snake",
+    "build-lib:watch": "ng build sergei-angular-snake --watch",
+    "build-lib:prod": "ng build sergei-angular-snake --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
