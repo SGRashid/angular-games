@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { SergeiAngularSnakeComponent } from './sergei-angular-snake.component';
+import { GridComponent } from './components/grid/grid.component';
 
 
 
 @NgModule({
-  declarations: [SergeiAngularSnakeComponent],
+  declarations: [SergeiAngularSnakeComponent, GridComponent],
   imports: [
   ],
   exports: [SergeiAngularSnakeComponent]
