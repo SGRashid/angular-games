@@ -5,6 +5,11 @@ type Cell = 'empty' | 'snake' | 'food' | 'enemy';
 type Row = Cell[];
 type Grid = Row[];
 
+interface ICoordinates {
+  x: number;
+  y: number;
+}
+
 @Component({
   selector: 'lib-grid',
   templateUrl: './grid.component.html',
@@ -14,6 +19,8 @@ export class GridComponent implements OnInit {
 
   @Input() height: number;
   @Input() width: number;
+  @Input() snake: ICoordinates[];
+  @Input() food: ICoordinates[] | undefined;
 
   grid: Grid;
 
@@ -25,6 +32,7 @@ export class GridComponent implements OnInit {
     }
 
     this.grid = this.getGrid(this.width, this.height);
+    console.log(this.snake);
   }
 
   getGrid(width: number, heidht: number): Grid {
