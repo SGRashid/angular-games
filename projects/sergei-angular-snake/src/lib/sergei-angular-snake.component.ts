@@ -34,26 +34,12 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
 
   @HostListener('document:keydown', ['$event']) onKeyDown(event: KeyboardEvent): void {
-    console.log(event);
-    if (event.code === 'Space') {
-      this.pauseOrStartGame();
-    }
+    if (event.code === 'Space') this.pauseOrStartGame();
 
-    if (event.code === 'ArrowUp') {
-      this.setDirection(0, -1);
-    }
-
-    if (event.code === 'ArrowDown') {
-      this.setDirection(0, 1);
-    }
-
-    if (event.code === 'ArrowLeft') {
-      this.setDirection(-1, 0);
-    }
-
-    if (event.code === 'ArrowRight') {
-      this.setDirection(1, 0);
-    }
+    if (event.code === 'ArrowUp') this.setDirection(0, -1);
+    if (event.code === 'ArrowDown') this.setDirection(0, 1);
+    if (event.code === 'ArrowLeft') this.setDirection(-1, 0);
+    if (event.code === 'ArrowRight') this.setDirection(1, 0);
   }
 
   constructor() { }
@@ -92,6 +78,10 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   }
 
   setDirection(x: Direction, y: Direction): void {
+    // запрещаем движение задом наперед
+    if (this.xDirection === - x) return;
+    if (this.yDirection === - y) return;
+
     this.xDirection = x;
     this.yDirection = y;
   }
