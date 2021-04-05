@@ -5,5 +5,8 @@ import { Injectable } from '@angular/core';
 })
 export class SergeiAngularSnakeService {
 
-  constructor() { }
+  constructor() {
+  }
+
+  public random = (maxNum: number): number => Math.floor(Math.random() * maxNum + 1);
 }

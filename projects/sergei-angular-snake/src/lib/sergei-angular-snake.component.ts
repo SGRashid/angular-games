@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
+import { SergeiAngularSnakeService } from './sergei-angular-snake.service';
 
 // типы в отдельный файл!!
 
@@ -31,7 +32,8 @@ const snake = [
 })
 export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
 
-  snake: any;
+  snake: ICoordinates[];
+  food: ICoordinates;
 
   width = 20;
   height = 20;
@@ -54,11 +56,14 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
     if (event.code === 'KeyR') this.restartGame();
   }
 
-  constructor() { }
+  constructor(private snakeService: SergeiAngularSnakeService) { }
 
   ngOnInit(): void {
     this.snake = snake;
     this.move();
+    this.addFood();
+
+    console.log(this.food);
   }
 
   ngOnDestroy(): void {
@@ -121,6 +126,14 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   restartGame(isGameOver?: boolean): void {
     if (isGameOver) alert('GAME OVER');
     window.location.reload();
+  }
+
+  addFood(): void {
+    const rand = this.snakeService.random;
+    this.food = {
+      x: rand(this.width),
+      y: rand(this.height)
+    };
   }
 
 }
