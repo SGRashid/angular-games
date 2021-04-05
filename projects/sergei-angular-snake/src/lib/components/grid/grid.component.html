@@ -1,5 +1,7 @@
 <table class="grid">
   <tr class="grid__row" *ngFor="let row of grid">
-    <td class="grid__cell" *ngFor="let cell of row"></td>
+    <td class="grid__cell {{getCellClass(cell)}}"
+        *ngFor="let cell of row"
+    ></td>
   </tr>
 </table>

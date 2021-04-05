@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
-//for tests
+// for tests
 const snake = [
-  { x: 1, y: 1},
-  { x: 1, y: 2},
-  { x: 1, y: 3},
-  { x: 1, y: 4},
+  { x: 5, y: 5},
+  { x: 6, y: 5},
+  { x: 7, y: 5},
+  { x: 8, y: 5},
 ];
 
 @Component({

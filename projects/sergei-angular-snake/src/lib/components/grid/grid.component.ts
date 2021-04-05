@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 // вынеси типы в отдельный файл
-type Cell = 'empty' | 'snake' | 'food' | 'enemy';
+type Cell = 'empty' | 'full' | 'food' | 'enemy';
 type Row = Cell[];
 type Grid = Row[];
 
@@ -38,19 +38,29 @@ export class GridComponent implements OnInit {
   getGrid(width: number, heidht: number): Grid {
     const gridArr = [];
     for (let i = 1; i <= heidht; i++) {
-      const row = this.getRow(width);
+      const row = this.getRow(width, i);
       gridArr.push(row);
     }
 
     return gridArr;
   }
 
-  getRow(width: number): Row {
+  getRow(width: number, rowNumber: number): Row {
     const row = [];
     for (let i = 1; i <= width; i++) {
-      row.push('empty');
+      let result = 'empty';
+
+      this.snake.forEach(point => {
+        if (point.x === i && point.y === rowNumber) {
+          result = 'full';
+        }
+      });
+
+      row.push(result);
     }
     return row;
   }
+
+  getCellClass = (cell: string): string => `grid__cell_${cell}`;
 
 }
