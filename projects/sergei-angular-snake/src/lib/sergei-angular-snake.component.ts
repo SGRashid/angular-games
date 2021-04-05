@@ -24,7 +24,11 @@ const snake = [
 @Component({
   selector: 'lib-snake',
   template: `
-    <lib-grid [width]="width" [height]="height" [snake]="snake"></lib-grid>
+    <lib-grid [width]="width"
+              [height]="height"
+              [snake]="snake"
+              [food]="food"
+    ></lib-grid>
     <div style="color: white;" *ngIf="!isGameOn">PAUSE SCORE {{ score }}</div>
   `,
   styles: [

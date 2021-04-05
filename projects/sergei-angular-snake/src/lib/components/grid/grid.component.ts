@@ -20,7 +20,7 @@ export class GridComponent implements OnInit, OnChanges {
   @Input() height: number;
   @Input() width: number;
   @Input() snake: ICoordinates[];
-  @Input() food: ICoordinates[] | undefined;
+  @Input() food: ICoordinates | undefined;
 
   grid: Grid;
 
@@ -58,6 +58,10 @@ export class GridComponent implements OnInit, OnChanges {
           result = 'full';
         }
       });
+
+      if (this.food.x === i && this.food.y === rowNumber) {
+        result = 'food';
+      }
 
       row.push(result);
     }
