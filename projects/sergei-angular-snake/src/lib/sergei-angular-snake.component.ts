@@ -21,12 +21,15 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
 
   snake: any;
 
+  delay = 1000;
+
   subscription = new Subscription();
 
   constructor() { }
 
   ngOnInit(): void {
     this.snake = snake;
+    console.log(this.snake);
     this.move();
   }
 
@@ -35,8 +38,14 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   }
 
   move(): void {
-    const subs = interval(500).subscribe(res => console.log(res));
+    const subs = interval(this.delay).subscribe(this.step);
     this.subscription.add(subs);
+  }
+
+  step = (res: number): void => {
+    const len = this.snake.length;
+    const newPoint = { x: this.snake[len - 1].x + 1, y: this.snake[len - 1].y };
+    this.snake = [...this.snake.slice(1, len), newPoint];
   }
 
 }

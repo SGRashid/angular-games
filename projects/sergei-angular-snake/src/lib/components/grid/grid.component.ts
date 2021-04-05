@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 
 // вынеси типы в отдельный файл
 type Cell = 'empty' | 'full' | 'food' | 'enemy';
@@ -15,7 +15,7 @@ interface ICoordinates {
   templateUrl: './grid.component.html',
   styleUrls: ['./grid.component.less']
 })
-export class GridComponent implements OnInit {
+export class GridComponent implements OnInit, OnChanges {
 
   @Input() height: number;
   @Input() width: number;
@@ -32,7 +32,10 @@ export class GridComponent implements OnInit {
     }
 
     this.grid = this.getGrid(this.width, this.height);
-    console.log(this.snake);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.grid = this.getGrid(this.width, this.height);
   }
 
   getGrid(width: number, heidht: number): Grid {
