@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 
 // for tests
@@ -20,16 +20,19 @@ const snake = [
 export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
 
   snake: any;
-
   delay = 1000;
+  isGameOn = true;
 
   subscription = new Subscription();
+
+  @HostListener('document:keydown.space') pauseOrStartGame($event): void {
+    this.isGameOn = !this.isGameOn;
+  }
 
   constructor() { }
 
   ngOnInit(): void {
     this.snake = snake;
-    console.log(this.snake);
     this.move();
   }
 
@@ -38,13 +41,19 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   }
 
   move(): void {
-    const subs = interval(this.delay).subscribe(this.step);
-    this.subscription.add(subs);
+    this.subscription.add(
+      interval(this.delay).subscribe(this.step)
+    );
   }
 
   step = (res: number): void => {
+
+    if (!this.isGameOn) {
+      return;
+    }
+
     const len = this.snake.length;
-    const newPoint = { x: this.snake[len - 1].x + 1, y: this.snake[len - 1].y };
+    const newPoint = {x: this.snake[len - 1].x + 1, y: this.snake[len - 1].y};
     this.snake = [...this.snake.slice(1, len), newPoint];
   }
 
