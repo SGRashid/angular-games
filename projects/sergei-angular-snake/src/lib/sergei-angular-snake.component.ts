@@ -93,7 +93,14 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
     };
 
     this.isGameOver(newPoint);
-    this.isFood(newPoint);
+    
+    // если съели еду
+    if (newPoint.x === this.food.x && newPoint.y === this.food.y) {
+      this.addFood();
+      this.score++;
+      this.snake = [...this.snake, newPoint];
+      return;
+    }
 
     this.snake = [...this.snake.slice(1, len), newPoint];
   }
@@ -140,12 +147,4 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
       y: rand(this.height)
     };
   }
-
-  isFood(point: ICoordinates) {
-    if (point.x === this.food.x && point.y === this.food.y) {
-      this.score++;
-      this.addFood();
-    }
-  } 
-
 }
