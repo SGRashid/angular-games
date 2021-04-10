@@ -1,7 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { ICoordinates, Cell, Row, Grid } from '../../sergei-angular-snake.component';
 
-
 @Component({
   selector: 'lib-grid',
   templateUrl: './grid.component.html',

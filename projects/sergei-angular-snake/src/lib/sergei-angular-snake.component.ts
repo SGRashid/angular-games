@@ -68,8 +68,6 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
     this.snake = snake;
     this.move();
     this.addFood();
-
-    console.log(this.food);
   }
 
   ngOnDestroy(): void {
@@ -94,13 +92,13 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
       y: this.snake[len - 1].y + this.yDirection
     };
 
-    this.isGameOver(newPoint);
+    if (this.isGameOver(newPoint)) return;
     
     // если съели еду
     if (newPoint.x === this.food.x && newPoint.y === this.food.y) {
       this.addFood();
       this.score++;
-      this.snake = [...this.snake, newPoint];
+      this.snake.push(newPoint);
       return;
     }
 
@@ -120,7 +118,7 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
     this.yDirection = y;
   }
 
-  isGameOver(point: ICoordinates): void {
+  isGameOver(point: ICoordinates): boolean | undefined {
     if (
       point.x > this.width ||
       point.x < 0 ||
@@ -128,18 +126,19 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
       point.y > this.height
     ) {
       this.restartGame(true);
-      return;
+      return true;
     }
 
     if (this.snake.some(snakePoint => snakePoint.x === point.x && snakePoint.y === point.y)) {
       this.restartGame(true);
-      return;
+      return true;
     }
   }
 
   restartGame(isGameOver?: boolean): void {
-    if (isGameOver) alert('GAME OVER');
-    window.location.reload();
+    // if (isGameOver) alert('GAME OVER');
+    this.snake = snake;
+    this.addFood();
   }
 
   addFood(): void {
@@ -148,5 +147,8 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
       x: rand(this.width),
       y: rand(this.height)
     };
+    if (this.snake.some(point => point.x === this.food.x && point.y === this.food.y)) {
+      this.addFood();
+    }
   }
 }
