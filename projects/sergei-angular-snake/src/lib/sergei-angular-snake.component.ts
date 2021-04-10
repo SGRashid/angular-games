@@ -139,7 +139,7 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
       return true;
     }
   }
-
+ 
   restartGame(isGameOver?: boolean): void {
     if (isGameOver) {
       this.isGameOverScreenOn = true;
