@@ -32,6 +32,8 @@ const snake = [
               [food]="food"
     ></lib-grid>
     <div style="color: white;" *ngIf="!isGameOn">PAUSE SCORE {{ score }}</div>
+    <div style="color: white;" *ngIf="isGameOverScreenOn">GAME OVER</div>
+    <div style="color: white;" *ngIf="isGameOverScreenOn">press SPACE for start</div>
   `,
   styles: [
   ]
@@ -48,6 +50,7 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   isGameOn = true;
   xDirection = 1;
   yDirection = 0;
+  isGameOverScreenOn = false;
 
   subscription = new Subscription();
 
@@ -85,6 +88,8 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
     if (!this.isGameOn) {
       return;
     }
+
+    this.isGameOverScreenOn = false;
 
     const len = this.snake.length;
     const newPoint = {
@@ -136,8 +141,13 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   }
 
   restartGame(isGameOver?: boolean): void {
-    // if (isGameOver) alert('GAME OVER');
+    if (isGameOver) {
+      this.isGameOverScreenOn = true;
+      this.isGameOn = false;
+    };
     this.snake = snake;
+    this.xDirection = 1;
+    this.yDirection = 0;
     this.addFood();
   }
 
