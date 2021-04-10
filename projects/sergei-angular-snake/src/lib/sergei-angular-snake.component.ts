@@ -5,20 +5,22 @@ import { SergeiAngularSnakeService } from './sergei-angular-snake.service';
 // типы в отдельный файл!!
 
 type Direction = -1 | 0 | 1;
+type Cell = 'empty' | 'full' | 'food' | 'enemy';
+type Row = Cell[];
+type Grid = Row[];
+
 interface ICoordinates {
   x: number;
   y: number;
 }
+
+export { ICoordinates, Direction, Cell, Row, Grid };
 
 // for tests
 const snake = [
   { x: 5, y: 5},
   { x: 6, y: 5},
   { x: 7, y: 5},
-  { x: 8, y: 5},
-  { x: 9, y: 5},
-  { x: 10, y: 5},
-  { x: 11, y: 5},
 ];
 
 @Component({

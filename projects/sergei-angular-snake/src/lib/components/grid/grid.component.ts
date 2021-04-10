@@ -1,14 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import { ICoordinates, Cell, Row, Grid } from '../../sergei-angular-snake.component';
 
-// вынеси типы в отдельный файл
-type Cell = 'empty' | 'full' | 'food' | 'enemy';
-type Row = Cell[];
-type Grid = Row[];
-
-interface ICoordinates {
-  x: number;
-  y: number;
-}
 
 @Component({
   selector: 'lib-grid',
