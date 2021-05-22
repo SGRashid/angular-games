@@ -162,9 +162,9 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
     if (isGameOver) {
       this.isGameOverScreenOn = true;
       this.isGameOn = false;
-      this._delay = this._startDelay;
     };
     this.snake = snake;
+    this._delay = this._startDelay;
     this._xDirection = 1;
     this._yDirection = 0;
     this.addFood();
