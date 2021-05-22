@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { interval, Subscription } from 'rxjs';
+import { Subscription, Subject, of } from 'rxjs';
+import { switchMap, delay } from 'rxjs/operators';
 import { SergeiAngularSnakeService } from './sergei-angular-snake.service';
 
 // типы в отдельный файл!!
@@ -46,13 +47,18 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   width = 20;
   height = 20;
   score = 0;
-  delay = 500;
   isGameOn = true;
-  xDirection = 1;
-  yDirection = 0;
   isGameOverScreenOn = false;
 
-  subscription = new Subscription();
+  private _delay = 500;
+  private _minDelay = 100;
+  private _delayStep = 50;
+
+  private _xDirection = 1;
+  private _yDirection = 0;
+
+  private _tic$ = new Subject<number>();
+  private _subscription = new Subscription();
 
   @HostListener('document:keydown', ['$event']) onKeyDown(event: KeyboardEvent): void {
     if (event.code === 'Space') this.pauseOrStartGame();
@@ -65,7 +71,7 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
     if (event.code === 'KeyR') this.restartGame();
   }
 
-  constructor(private snakeService: SergeiAngularSnakeService) { }
+  constructor(private _snakeService: SergeiAngularSnakeService) { }
 
   ngOnInit(): void {
     this.snake = snake;
@@ -74,16 +80,20 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this._subscription.unsubscribe();
   }
 
   move(): void {
-    this.subscription.add(
-      interval(this.delay).subscribe(this.step)
-    );
+    const sub = this._tic$.pipe(
+      switchMap(e => of(e).pipe(delay(e)))
+    )
+    .subscribe(this.step);
+
+    this._subscription.add(sub);
+    this._tic$.next(this._delay);
   }
 
-  step = (res: number): void => {
+  step = (): void => {
 
     if (!this.isGameOn) {
       return;
@@ -93,8 +103,8 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
 
     const len = this.snake.length;
     const newPoint = {
-      x: this.snake[len - 1].x + this.xDirection,
-      y: this.snake[len - 1].y + this.yDirection
+      x: this.snake[len - 1].x + this._xDirection,
+      y: this.snake[len - 1].y + this._yDirection
     };
 
     if (this.isGameOver(newPoint)) return;
@@ -103,24 +113,30 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
     if (newPoint.x === this.food.x && newPoint.y === this.food.y) {
       this.addFood();
       this.score++;
+      this._delay = this._delay > this._minDelay ? this._delay - this._delayStep : this._delay;
       this.snake.push(newPoint);
+      this._tic$.next(this._delay);
       return;
     }
 
     this.snake = [...this.snake.slice(1, len), newPoint];
+    this._tic$.next(this._delay);
   }
 
   pauseOrStartGame(): void {
     this.isGameOn = !this.isGameOn;
+    if (this.isGameOn) {
+      this._tic$.next();
+    }
   }
 
   setDirection(x: Direction, y: Direction): void {
     // запрещаем движение задом наперед
-    if (this.xDirection === - x) return;
-    if (this.yDirection === - y) return;
+    if (this._xDirection === - x) return;
+    if (this._yDirection === - y) return;
 
-    this.xDirection = x;
-    this.yDirection = y;
+    this._xDirection = x;
+    this._yDirection = y;
   }
 
   isGameOver(point: ICoordinates): boolean | undefined {
@@ -146,13 +162,13 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
       this.isGameOn = false;
     };
     this.snake = snake;
-    this.xDirection = 1;
-    this.yDirection = 0;
+    this._xDirection = 1;
+    this._yDirection = 0;
     this.addFood();
   }
 
   addFood(): void {
-    const rand = this.snakeService.random;
+    const rand = this._snakeService.random;
     this.food = {
       x: rand(this.width),
       y: rand(this.height)
