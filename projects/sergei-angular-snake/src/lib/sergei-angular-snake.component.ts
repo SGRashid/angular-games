@@ -50,7 +50,8 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   isGameOn = true;
   isGameOverScreenOn = false;
 
-  private _delay = 500;
+  private _delay: number;
+  private _startDelay = 500;
   private _minDelay = 100;
   private _delayStep = 50;
 
@@ -75,6 +76,7 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.snake = snake;
+    this._delay = this._startDelay;
     this.move();
     this.addFood();
   }
@@ -126,7 +128,7 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   pauseOrStartGame(): void {
     this.isGameOn = !this.isGameOn;
     if (this.isGameOn) {
-      this._tic$.next();
+      this._tic$.next(0);
     }
   }
 
@@ -160,6 +162,7 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
     if (isGameOver) {
       this.isGameOverScreenOn = true;
       this.isGameOn = false;
+      this._delay = this._startDelay;
     };
     this.snake = snake;
     this._xDirection = 1;
