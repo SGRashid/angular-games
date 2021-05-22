@@ -33,8 +33,8 @@ const snake = [
               [food]="food"
     ></lib-grid>
     <div style="color: white;" *ngIf="!isGameOn">PAUSE SCORE {{ score }}</div>
-    <div style="color: white;" *ngIf="isGameOverScreenOn">GAME OVER</div>
-    <div style="color: white;" *ngIf="isGameOverScreenOn">press SPACE for start</div>
+    <div style="color: white;" *ngIf="_isGameOverScreenOn">GAME OVER</div>
+    <div style="color: white;" *ngIf="_isGameOverScreenOn">press SPACE for start</div>
   `,
   styles: [
   ]
@@ -48,12 +48,12 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   height = 20;
   score = 0;
   isGameOn = true;
-  isGameOverScreenOn = false;
+  _isGameOverScreenOn = false;
 
   private _delay: number;
   private _startDelay = 500;
   private _minDelay = 100;
-  private _delayStep = 50;
+  private _delay_step = 50;
 
   private _xDirection = 1;
   private _yDirection = 0;
@@ -62,14 +62,14 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   private _subscription = new Subscription();
 
   @HostListener('document:keydown', ['$event']) onKeyDown(event: KeyboardEvent): void {
-    if (event.code === 'Space') this.pauseOrStartGame();
+    if (event.code === 'Space') this._pauseOrStartGame();
 
-    if (event.code === 'ArrowUp') this.setDirection(0, -1);
-    if (event.code === 'ArrowDown') this.setDirection(0, 1);
-    if (event.code === 'ArrowLeft') this.setDirection(-1, 0);
-    if (event.code === 'ArrowRight') this.setDirection(1, 0);
+    if (event.code === 'ArrowUp') this._setDirection(0, -1);
+    if (event.code === 'ArrowDown') this._setDirection(0, 1);
+    if (event.code === 'ArrowLeft') this._setDirection(-1, 0);
+    if (event.code === 'ArrowRight') this._setDirection(1, 0);
 
-    if (event.code === 'KeyR') this.restartGame();
+    if (event.code === 'KeyR') this._restartGame();
   }
 
   constructor(private _snakeService: SergeiAngularSnakeService) { }
@@ -77,31 +77,31 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.snake = snake;
     this._delay = this._startDelay;
-    this.move();
-    this.addFood();
+    this._move();
+    this._addFood();
   }
 
   ngOnDestroy(): void {
     this._subscription.unsubscribe();
   }
 
-  move(): void {
+  private _move(): void {
     const sub = this._tic$.pipe(
       switchMap(e => of(e).pipe(delay(e)))
     )
-    .subscribe(this.step);
+    .subscribe(this._step);
 
     this._subscription.add(sub);
     this._tic$.next(this._delay);
   }
 
-  step = (): void => {
+  private _step = (): void => {
 
     if (!this.isGameOn) {
       return;
     }
 
-    this.isGameOverScreenOn = false;
+    this._isGameOverScreenOn = false;
 
     const len = this.snake.length;
     const newPoint = {
@@ -109,13 +109,13 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
       y: this.snake[len - 1].y + this._yDirection
     };
 
-    if (this.isGameOver(newPoint)) return;
-    
+    if (this._isGameOver(newPoint)) return;
+
     // если съели еду
     if (newPoint.x === this.food.x && newPoint.y === this.food.y) {
-      this.addFood();
+      this._addFood();
       this.score++;
-      this._delay = this._delay > this._minDelay ? this._delay - this._delayStep : this._delay;
+      this._delay = this._delay > this._minDelay ? this._delay - this._delay_step : this._delay;
       this.snake.push(newPoint);
       this._tic$.next(this._delay);
       return;
@@ -125,14 +125,14 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
     this._tic$.next(this._delay);
   }
 
-  pauseOrStartGame(): void {
+  private _pauseOrStartGame(): void {
     this.isGameOn = !this.isGameOn;
     if (this.isGameOn) {
       this._tic$.next(0);
     }
   }
 
-  setDirection(x: Direction, y: Direction): void {
+  private _setDirection(x: Direction, y: Direction): void {
     // запрещаем движение задом наперед
     if (this._xDirection === - x) return;
     if (this._yDirection === - y) return;
@@ -141,43 +141,43 @@ export class SergeiAngularSnakeComponent implements OnInit, OnDestroy {
     this._yDirection = y;
   }
 
-  isGameOver(point: ICoordinates): boolean | undefined {
+  private _isGameOver(point: ICoordinates): boolean | undefined {
     if (
       point.x > this.width ||
       point.x < 0 ||
       point.y < 0 ||
       point.y > this.height
     ) {
-      this.restartGame(true);
+      this._restartGame(true);
       return true;
     }
 
     if (this.snake.some(snakePoint => snakePoint.x === point.x && snakePoint.y === point.y)) {
-      this.restartGame(true);
+      this._restartGame(true);
       return true;
     }
   }
- 
-  restartGame(isGameOver?: boolean): void {
+
+  private _restartGame(isGameOver?: boolean): void {
     if (isGameOver) {
-      this.isGameOverScreenOn = true;
+      this._isGameOverScreenOn = true;
       this.isGameOn = false;
     };
     this.snake = snake;
     this._delay = this._startDelay;
     this._xDirection = 1;
     this._yDirection = 0;
-    this.addFood();
+    this._addFood();
   }
 
-  addFood(): void {
+  private _addFood(): void {
     const rand = this._snakeService.random;
     this.food = {
       x: rand(this.width),
       y: rand(this.height)
     };
     if (this.snake.some(point => point.x === this.food.x && point.y === this.food.y)) {
-      this.addFood();
+      this._addFood();
     }
   }
 }
